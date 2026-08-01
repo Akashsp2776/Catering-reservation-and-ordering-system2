@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@/types'
 
 interface AuthContextType {
@@ -14,8 +14,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+export function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [user] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -23,31 +27,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false)
   }, [])
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (_email: string, _password: string): Promise<void> => {
     // Implementation will be added later
   }
 
-  const signUp = async (email: string, password: string, userData: any) => {
+  const signUp = async (
+    _email: string,
+    _password: string,
+    _userData: any
+  ): Promise<void> => {
     // Implementation will be added later
   }
 
-  const signOut = async () => {
+  const signOut = async (): Promise<void> => {
     // Implementation will be added later
   }
 
-  const updateProfile = async (data: Partial<User>) => {
+  const updateProfile = async (
+    _data: Partial<User>
+  ): Promise<void> => {
     // Implementation will be added later
   }
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      loading,
-      signIn,
-      signUp,
-      signOut,
-      updateProfile
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        signIn,
+        signUp,
+        signOut,
+        updateProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
@@ -55,8 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (context === undefined) {
+
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')
   }
+
   return context
 }
